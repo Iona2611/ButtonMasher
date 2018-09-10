@@ -1,6 +1,7 @@
 // Included libraries
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <string>
 
 
 
@@ -57,7 +58,17 @@ int main()
 	authorText.setStyle(sf::Text::Italic);
 	authorText.setPosition(gameWindow.getSize().x / 2 - authorText.getLocalBounds().width / 2, 80);
 
-	int score = 0;	sf::Text scoreText;	scoreText.setFont(gameFont);	scoreText.setString("Score: 0");	scoreText.setCharacterSize(25);	scoreText.setFillColor(sf::Color::White);	scoreText.setPosition(30, 30);	
+	// Score
+	int score = 0;
+	
+	// Score Text
+	sf::Text scoreText;
+	scoreText.setFont(gameFont);
+	scoreText.setString("Score: " + std::to_string(score));
+	scoreText.setCharacterSize(25);
+	scoreText.setFillColor(sf::Color::White);
+	scoreText.setPosition(30, 30);
+	
 
 	//------------------------------------------------------
 	// Game Loop
@@ -81,14 +92,22 @@ int main()
 		}
 
 
-		// TODO: Update game state
+		// Update game state
+		score = score + 1;
+		scoreText.setString("Score: " + std::to_string(score));
+		
 
-		// TODO: Draw graphics 
+
+
+
+
+		// Draw graphics 
 		gameWindow.clear(sf::Color::Black);
 	
 		// Draw everything
 		gameWindow.draw(buttonSprite);
-		gameWindow.draw(titleText);		gameWindow.draw(authorText);
+		gameWindow.draw(titleText);
+		gameWindow.draw(authorText);
 		gameWindow.draw(scoreText);
 
 		// Display the window contents on the screen 
