@@ -1,17 +1,44 @@
 // Included libraries
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 
 
 // entry point for the program
 int main()
 {
+	//------------------------------------------------------
+	// Game Setup
+	//------------------------------------------------------
+	
 	// Make a variable called gameWindow of the type RenderWindow
 	sf::RenderWindow gameWindow;
 	gameWindow.create(sf::VideoMode ::getDesktopMode(), "Button Masher",
 		sf::Style::Titlebar | sf::Style::Close);
 
-	// Game loop 
+	// Create Button Sprite		
+	sf::Texture buttonTexture;
+	buttonTexture.loadFromFile("graphics/button.png");
+
+	sf::Sprite buttonSprite;
+	buttonSprite.setTexture(buttonTexture);
+
+	// Create Music 
+	sf::Music gameMusic;
+	gameMusic.openFromFile("audio/music.ogg");
+	gameMusic.play();
+
+	// centre the sprite on the screen 
+	buttonSprite.setPosition(
+		gameWindow.getSize().x / 2 - buttonTexture.getSize().x / 2, 
+		gameWindow.getSize().y / 2 - buttonTexture.getSize().y / 2);
+
+
+
+	//------------------------------------------------------
+	// Game Loop
+	//------------------------------------------------------
+	
 	// Runs every frame until the game window is closed 
 	while (gameWindow.isOpen())
 	{
@@ -33,7 +60,14 @@ int main()
 		// TODO: Update game state
 
 		// TODO: Draw graphics 
+		gameWindow.clear(sf::Color::Black);
+	
+		// Draw everything
+		gameWindow.draw(buttonSprite);
 
+
+		// Display the window contents on the screen 
+		gameWindow.display();
 	}
 
 	// exit point for the program
