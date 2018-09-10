@@ -23,17 +23,29 @@ int main()
 	sf::Sprite buttonSprite;
 	buttonSprite.setTexture(buttonTexture);
 
-	// Create Music 
-	sf::Music gameMusic;
-	gameMusic.openFromFile("audio/music.ogg");
-	gameMusic.play();
-
 	// centre the sprite on the screen 
 	buttonSprite.setPosition(
 		gameWindow.getSize().x / 2 - buttonTexture.getSize().x / 2, 
 		gameWindow.getSize().y / 2 - buttonTexture.getSize().y / 2);
 
+	// Create Music 
+	sf::Music gameMusic;
+	gameMusic.openFromFile("audio/music.ogg");
+	//gameMusic.play();
 
+	// Create Font
+	sf::Font gameFont;
+	gameFont.loadFromFile("fonts/mainFont.ttf");
+	
+	// Create Title 
+	sf::Text titleText;
+	titleText.setFont(gameFont);
+	titleText.setString("Button Mahser!");
+	titleText.setCharacterSize(50);
+	titleText.setFillColor(sf::Color::Cyan);
+	titleText.setStyle(sf::Text::Bold | sf::Text::Italic);
+	titleText.setPosition(gameWindow.getSize().x / 2 
+		- titleText.getLocalBounds().width / 2, 30);
 
 	//------------------------------------------------------
 	// Game Loop
@@ -64,6 +76,7 @@ int main()
 	
 		// Draw everything
 		gameWindow.draw(buttonSprite);
+		gameWindow.draw(titleText);
 
 
 		// Display the window contents on the screen 
