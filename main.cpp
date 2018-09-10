@@ -41,11 +41,23 @@ int main()
 	sf::Text titleText;
 	titleText.setFont(gameFont);
 	titleText.setString("Button Mahser!");
-	titleText.setCharacterSize(50);
+	titleText.setCharacterSize(40);
 	titleText.setFillColor(sf::Color::Cyan);
 	titleText.setStyle(sf::Text::Bold | sf::Text::Italic);
 	titleText.setPosition(gameWindow.getSize().x / 2 
 		- titleText.getLocalBounds().width / 2, 30);
+
+
+	// Author Text
+	sf::Text authorText;
+	authorText.setFont(gameFont);
+	authorText.setString("by Iona O'Donnell");
+	authorText.setCharacterSize(20);
+	authorText.setFillColor(sf::Color::Magenta);
+	authorText.setStyle(sf::Text::Italic);
+	authorText.setPosition(gameWindow.getSize().x / 2 - authorText.getLocalBounds().width / 2, 80);
+
+	int score = 0;	sf::Text scoreText;	scoreText.setFont(gameFont);	scoreText.setString("Score: 0");	scoreText.setCharacterSize(25);	scoreText.setFillColor(sf::Color::White);	scoreText.setPosition(30, 30);	
 
 	//------------------------------------------------------
 	// Game Loop
@@ -76,8 +88,8 @@ int main()
 	
 		// Draw everything
 		gameWindow.draw(buttonSprite);
-		gameWindow.draw(titleText);
-
+		gameWindow.draw(titleText);		gameWindow.draw(authorText);
+		gameWindow.draw(scoreText);
 
 		// Display the window contents on the screen 
 		gameWindow.display();
