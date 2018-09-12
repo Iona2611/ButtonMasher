@@ -72,6 +72,12 @@ int main()
 	sf::Sound gameOverSound;
 	gameOverSound.setBuffer(gameOverBuffer);
 
+	// Game start audio
+	sf::SoundBuffer gameStartBuffer;
+	gameStartBuffer.loadFromFile("audio/gameover.ogg");
+	sf::Sound gameStartSound;
+	gameStartSound.setBuffer(gameStartBuffer);
+
 	// Score
 	int score = 0;
 
@@ -144,6 +150,7 @@ int main()
 						score = 0;
 						timeRemaining = timeLimit;
 						promptText.setString("Click the button as fast as you can!");
+						gameStartSound.play();
 						
 
 					}
