@@ -15,7 +15,7 @@ int main()
 	// Make a variable called gameWindow of the type RenderWindow
 	sf::RenderWindow gameWindow;
 	gameWindow.create(sf::VideoMode ::getDesktopMode(), "Button Masher",
-		sf::Style::Titlebar | sf::Style::Close);
+	sf::Style::Titlebar | sf::Style::Close);
 
 	// Create Button Sprite		
 	sf::Texture buttonTexture;
@@ -26,7 +26,7 @@ int main()
 
 	// centre the sprite on the screen 
 	buttonSprite.setPosition(
-		gameWindow.getSize().x / 2 - buttonTexture.getSize().x / 2, 
+		gameWindow.getSize().x / 2 - buttonTexture.getSize().x / 2,
 		gameWindow.getSize().y / 2 - buttonTexture.getSize().y / 2);
 
 	// Create Music 
@@ -37,7 +37,7 @@ int main()
 	// Create Font
 	sf::Font gameFont;
 	gameFont.loadFromFile("fonts/mainFont.ttf");
-	
+
 	// Create Title 
 	sf::Text titleText;
 	titleText.setFont(gameFont);
@@ -45,7 +45,7 @@ int main()
 	titleText.setCharacterSize(40);
 	titleText.setFillColor(sf::Color::Cyan);
 	titleText.setStyle(sf::Text::Bold | sf::Text::Italic);
-	titleText.setPosition(gameWindow.getSize().x / 2 
+	titleText.setPosition(gameWindow.getSize().x / 2
 		- titleText.getLocalBounds().width / 2, 30);
 
 
@@ -58,9 +58,23 @@ int main()
 	authorText.setStyle(sf::Text::Italic);
 	authorText.setPosition(gameWindow.getSize().x / 2 - authorText.getLocalBounds().width / 2, 80);
 
+	// Prompt text
+	sf::Text promptText;
+	promptText.setFont(gameFont);
+	promptText.setString("Click the button to start the game!");
+	promptText.setCharacterSize(16);
+	promptText.setFillColor(sf::Color::White);
+	promptText.setPosition(gameWindow.getSize().x / 2 - promptText.getLocalBounds().width / 2, 200);
+
+	// Game over audio 
+	sf::SoundBuffer gameOverBuffer;
+	gameOverBuffer.loadFromFile("audio/gameover.ogg");
+	sf::Sound gameOverSound;
+	gameOverSound.setBuffer(gameOverBuffer);
+
 	// Score
 	int score = 0;
-	
+
 	// Score Text
 	sf::Text scoreText;
 	scoreText.setFont(gameFont);
@@ -75,7 +89,7 @@ int main()
 	timerText.setString("Time Remaining: 0");
 	timerText.setCharacterSize(25);
 	timerText.setFillColor(sf::Color::White);
-	timerText.setPosition(gameWindow.getSize().x - timerText.getLocalBounds().width -50 / 2, 30);
+	timerText.setPosition(gameWindow.getSize().x - timerText.getLocalBounds().width - 50 / 2, 30);
 
 	// Timer functionality 
 	sf::Time timeLimit = sf::seconds(10.0f);
@@ -88,10 +102,13 @@ int main()
 	sf::Sound clickSound;
 	clickSound.setBuffer(clickBuffer);
 
+	// Game State
+	bool playing = false;
+
 	//------------------------------------------------------
 	// Game Loop
 	//------------------------------------------------------
-	
+
 	// Runs every frame until the game window is closed 
 	while (gameWindow.isOpen())
 	{
@@ -102,20 +119,36 @@ int main()
 			// Process events 
 			// check if the event is a mouse button pressed event
 
-			
+			// did the player click the mouse?
 			if (gameEvent.type == sf::Event::MouseButtonPressed)
-
 			{
 
 				if (buttonSprite.getGlobalBounds().contains(gameEvent.mouseButton.x, gameEvent.mouseButton.y))
 				{
-					// we clicked the button!!!
-					score = score + 1;
+					// They clicked it
 
 					// play the click sound 
 					clickSound.play();
 
+					// If the game is currently playing
+					if (playing == true)
+					{
+						// Add to the score
+						score = score + 1;
+					}
+					else
+					{
+						// We aren't playing, so we should start!
+						playing = true;
+						// Re-initialise the game
+						score = 0;
+						timeRemaining = timeLimit;
+						promptText.setString("Click the button as fast as you can!");
+						
+
+					}
 				}
+
 			}
 
 			// Check if the event is the closed event 
@@ -125,16 +158,30 @@ int main()
 				// close the game window
 				gameWindow.close();
 			}
-		}
 
+		}
 
 		// Update game state
 
 		sf::Time frameTime = gameClock.restart();
-		timeRemaining = timeRemaining - frameTime;
-		timerText.setString("Time Remaining: " + std::to_string((int)timeRemaining.asSeconds()));
 
+		if (playing == true)
+		{
+			timeRemaining = timeRemaining - frameTime;
+
+			if (timeRemaining.asSeconds() <= 0.0f)
+			{
+				timeRemaining = sf::seconds(0.0f);
+				playing = false;
+				promptText.setString("Your final score was" + std::to_string(score) + "!\nClick the button to start a new game! ");
+				gameOverSound.play();
+			}
+		}
+	
 		
+
+		// update our text displays based on data
+		timerText.setString("Time Remaining: " + std::to_string((int)timeRemaining.asSeconds()));
 		scoreText.setString("Score: " + std::to_string(score));
 		
 
@@ -149,6 +196,7 @@ int main()
 		gameWindow.draw(authorText);
 		gameWindow.draw(scoreText);
 		gameWindow.draw(timerText);
+		gameWindow.draw(promptText);
 
 		// Display the window contents on the screen 
 		gameWindow.display();
@@ -156,4 +204,5 @@ int main()
 
 	// exit point for the program
 	return 0;
+
 }
